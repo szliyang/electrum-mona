@@ -949,8 +949,12 @@ class Network(util.DaemonThread):
     def init_headers_file(self):
         b = self.blockchains[0]
         filename = b.path()
+        if os.path.exists(filename):
+            filesize = os.path.getsize(filename)
+        else:
+            filesize = 0
         length = 80 * len(bitcoin.NetworkConstants.CHECKPOINTS) * 2016
-        if not os.path.exists(filename) or os.path.getsize(filename) < length:
+        if filesize<=length:
             with open(filename, 'wb') as f:
                 if length>0:
                     f.seek(length-1)
